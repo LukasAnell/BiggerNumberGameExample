@@ -61,7 +61,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setListeners() {
-        // binding.{element} notation
         // choose setOnClickListener without ()
         buttonMainLeft.setOnClickListener {
             // extract the numbers each button stores and assign them to their own variable
