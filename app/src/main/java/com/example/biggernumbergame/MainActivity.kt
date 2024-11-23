@@ -7,36 +7,33 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.biggernumbergame.databinding.ActivityMainBinding
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
-    lateinit var textViewMainScore: TextView
-    lateinit var buttonMainLeft: Button
-    lateinit var buttonMainRight: Button
-
+    private lateinit var binding: ActivityMainBinding
     var score: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // ignore this stuff
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.layout_main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         /*
          * talk about naming convention in layout
          * --> WHAT_WHERE_WHY Ex. "textView_main_score"
          */
 
-        // initialize elements
-        wireWidgets()
-
         // set the textView with the score
-        textViewMainScore.text = "Score: $score"
+        binding.textViewMainScore.text = "Score: $score"
 
         // randomize the numbers on each button separately
         // use a function for this so you can just call it over and over again
@@ -52,8 +49,8 @@ class MainActivity : AppCompatActivity() {
     private fun randomizeButtons() {
         // remember Math.random() syntax for making ranges
         // Math.random() * possibilities + minimum
-        buttonMainLeft.text = (Math.random() * 100 + 1).roundToInt().toString()
-        buttonMainRight.text = (Math.random() * 100 + 1).roundToInt().toString()
+        binding.buttonMainLeft.text = (Math.random() * 100 + 1).roundToInt().toString()
+        binding.buttonMainRight.text = (Math.random() * 100 + 1).roundToInt().toString()
 
         // if you want, you can use a while loop to keep assigning a new number to the buttons if they turn out to be the same
         // while num1 == num2 --> reassign random number
@@ -62,11 +59,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setListeners() {
         // choose setOnClickListener without ()
-        buttonMainLeft.setOnClickListener {
+        binding.buttonMainLeft.setOnClickListener {
             // extract the numbers each button stores and assign them to their own variable
             // using Google is important, in this case to figure out how to convert a String into an int
-            val button1Val = Integer.parseInt(buttonMainLeft.text.toString())
-            val button2Val = Integer.parseInt(buttonMainRight.text.toString())
+            val button1Val = Integer.parseInt(binding.buttonMainLeft.text.toString())
+            val button2Val = Integer.parseInt(binding.buttonMainRight.text.toString())
 
             // check if their answer is correct
             // compare the number stored in the button to the number stored in the other button
@@ -82,17 +79,17 @@ class MainActivity : AppCompatActivity() {
             }
 
             // update textView with the score
-            textViewMainScore.text = "Score: $score"
+            binding.textViewMainScore.text = "Score: $score"
 
             // re-randomize buttons
             randomizeButtons()
         }
 
-        buttonMainRight.setOnClickListener {
+        binding.buttonMainRight.setOnClickListener {
             // do the same thing but the other way
             // so if button2 is correct you get points
-            val button1Val = Integer.parseInt(buttonMainLeft.text.toString())
-            val button2Val = Integer.parseInt(buttonMainRight.text.toString())
+            val button1Val = Integer.parseInt(binding.buttonMainLeft.text.toString())
+            val button2Val = Integer.parseInt(binding.buttonMainRight.text.toString())
 
             if(button2Val > button1Val) {
                 score++
@@ -100,15 +97,9 @@ class MainActivity : AppCompatActivity() {
                 score--
             }
 
-            textViewMainScore.text = "Score: $score"
+            binding.textViewMainScore.text = "Score: $score"
 
             randomizeButtons()
         }
-    }
-
-    private fun wireWidgets() {
-        textViewMainScore = findViewById(R.id.textView_main_score)
-        buttonMainLeft = findViewById(R.id.button_main_left)
-        buttonMainRight = findViewById(R.id.button_main_right)
     }
 }
